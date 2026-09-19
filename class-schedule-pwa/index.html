@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Lịch học">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+  <title>Lịch học</title>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">LỊCH HỌC</div>
+      <h1 id="pageTitle">Hôm nay</h1>
+    </div>
+    <button class="icon-btn" id="syncBtn" aria-label="Đồng bộ">↻</button>
+  </header>
+
+  <main id="app">
+    <section id="home" class="page active">
+      <div id="summaryCard" class="hero-card"></div>
+      <div class="section-head"><h2>Hôm nay</h2><button id="todayBtn" class="text-btn">Hôm nay</button></div>
+      <div id="todayList"></div>
+    </section>
+
+    <section id="week" class="page">
+      <div class="section-head">
+        <h2>Tuần này</h2>
+        <input id="weekPicker" type="date" aria-label="Chọn ngày">
+      </div>
+      <div id="weekGrid"></div>
+    </section>
+
+    <section id="subjects" class="page">
+      <div class="section-head"><h2>Môn học</h2></div>
+      <div id="subjectList"></div>
+    </section>
+
+    <section id="settings" class="page">
+      <div class="section-head"><h2>Cài đặt</h2></div>
+      <div class="settings-card">
+        <label>URL dữ liệu JSON / Apps Script
+          <input id="apiUrl" type="url" placeholder="https://script.google.com/macros/s/.../exec">
+        </label>
+        <label>URL CSV Google Sheets (dùng nếu chưa có API)
+          <input id="csvUrl" type="url" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=...">
+        </label>
+        <label>Nhắc trước (phút)
+          <select id="reminderMinutes">
+            <option value="5">5</option><option value="10">10</option><option value="15" selected>15</option>
+            <option value="30">30</option><option value="60">60</option>
+          </select>
+        </label>
+        <div class="settings-actions">
+          <button id="saveSettings" class="primary">Lưu cấu hình</button>
+          <button id="notifyBtn" class="secondary">Cho phép thông báo</button>
+          <button id="demoBtn" class="secondary">Dùng dữ liệu mẫu</button>
+        </div>
+        <p class="hint">App lưu lịch đã đồng bộ trong máy để vẫn xem được khi mất mạng. Trên iPhone, hãy mở app bằng Safari rồi chọn “Add to Home Screen”.</p>
+      </div>
+      <div class="settings-card">
+        <h3>Trạng thái</h3>
+        <div id="status"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button data-page="home" class="nav-item active"><span>⌂</span><small>Hôm nay</small></button>
+    <button data-page="week" class="nav-item"><span>▦</span><small>Tuần</small></button>
+    <button data-page="subjects" class="nav-item"><span>◫</span><small>Môn</small></button>
+    <button data-page="settings" class="nav-item"><span>⚙</span><small>Cài đặt</small></button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
