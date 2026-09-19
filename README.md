@@ -1,46 +1,36 @@
-# Lịch học PWA cho iPhone
+# Lịch học iPhone PWA
 
-## Cách dùng nhanh
+PWA cá nhân để xem lịch học trên iPhone, đồng bộ từ Google Sheets thông qua Google Apps Script.
 
-1. Upload toàn bộ thư mục này lên GitHub.
-2. Bật GitHub Pages cho repository.
-3. Mở URL GitHub Pages bằng Safari trên iPhone.
-4. Chọn Share → Add to Home Screen.
-5. Mở app từ icon ngoài màn hình.
+## Features
 
-## Kết nối Google Sheets
+- Hôm nay / 7 ngày / Môn học
+- Offline cache bằng localStorage + Service Worker
+- Đồng bộ tất cả tab lịch trong Google Sheets
+- Tự nhận diện bảng lịch dựa trên header
+- JSONP để PWA tĩnh gọi Apps Script
+- Nhắc trước giờ học khi PWA đang mở và Notification được cấp quyền
+- GitHub Actions deploy lên GitHub Pages
 
-### Cách A — Sheet public/published CSV
-Trong Google Sheets chọn File → Share → Publish to web, sau đó lấy URL CSV tương ứng với tab lịch.
+## GitHub Pages
 
-Hoặc dùng dạng:
-`https://docs.google.com/spreadsheets/d/SHEET_ID/export?format=csv&gid=GID`
+Site được deploy từ root bằng .github/workflows/deploy-pages.yml.
 
-Dán URL vào Cài đặt → URL CSV.
+URL dự kiến:
+https://thanhducp.github.io/lich-hoc-pwa-iphone/
 
-### Cách B — Sheet riêng tư
-Dùng Apps Script trong thư mục `apps-script`.
+GitHub Pages trên GitHub Free yêu cầu repository public. Nếu repository đang private, cần đổi visibility hoặc dùng gói GitHub hỗ trợ Pages cho private repositories.
 
-Mở Google Sheet → Extensions → Apps Script, dán `Code.gs`, thay `SPREADSHEET_ID` và `SHEET_GID`, rồi Deploy → New deployment → Web app.
+## Google Sheets
 
-Dán URL `/exec` vào trường URL API trong app.
-
-## Header dữ liệu
-
-App tự nhận nhiều tên cột phổ biến. Khuyến nghị chuẩn hóa thành:
-
-id,date,startTime,endTime,subject,teacher,room,note,status
-
-Ví dụ:
-
-2026-09-21-01,2026-09-21,09:30,11:30,Software Architecture,Nguyen Van A,B201,,SCHEDULED
-
-## Lưu ý notification iPhone
-
-PWA này có service worker, offline cache và nút xin quyền Notification. Notification web thực sự khi app bị đóng cần một push backend; không nên giả vờ rằng JavaScript timer trong PWA có thể đảm bảo báo thức trên iPhone. Phase tiếp theo có thể nối Web Push/OneSignal hoặc một backend riêng.
+Xem apps-script/README.md.
 
 ## Kiến trúc
 
-Google Sheets → Apps Script API → PWA → IndexedDB/localStorage
+Google Sheets → Apps Script Web App → JSON/JSONP → iPhone PWA.
 
-Google Sheets vẫn là nguồn dữ liệu lịch. App giữ bản cache cuối cùng trên thiết bị.
+AI tạo/cập nhật lịch nên nằm ở backend/private repository; PWA chỉ hiển thị và đồng bộ dữ liệu.
+
+## Notification
+
+Notification trong app được kiểm tra khi PWA đang chạy. Muốn đảm bảo thông báo khi app đã bị đóng trên iPhone cần Web Push/backend; không dựa vào JavaScript timer như một alarm hệ thống.
