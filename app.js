@@ -2,6 +2,7 @@ const DATA_KEY="schedule-pwa-v2";
 const CONFIG_KEY="schedule-config-v2";
 const NOTIFIED_KEY="schedule-notified-v1";
 let schedule=[];
+let selectedTaskId=null;
 let config=loadJSON(CONFIG_KEY,{apiUrl:"",apiToken:"",reminderMinutes:15});
 config.apiUrl=normalizeApiUrl(config.apiUrl);
 const $=s=>document.querySelector(s);
@@ -39,6 +40,7 @@ function normalize(row,index){
     teacher:get(["teacher","GV","Giảng viên","Giáo viên"]),
     room:get(["room","Phòng","Room"]),
     note:get(["note","Ghi chú","Note"]),
+    description:get(["description","Description","Mô tả","Mô tả chi tiết","Chi tiết"]),
     status:get(["status","Trạng thái"])||"SCHEDULED",
     sourceSheet:get(["sourceSheet","Sheet"]),
     sourceRow:get(["sourceRow","Row"])
@@ -109,6 +111,7 @@ function render(){
     :'<div class="big">Không có lịch sắp tới</div><div class="muted">Hãy đồng bộ dữ liệu.</div>';
   renderWeek($("#weekPicker").value||t);
   renderSubjects();
+  renderTasks(today);
 }
 function renderWeek(anchor){
   const d=new Date(anchor+"T00:00:00");
@@ -121,6 +124,30 @@ function renderWeek(anchor){
     html+=`<div class="day-card"><div class="day-title"><span>${esc(fmtDate(iso))}</span><span>${items.length} buổi</span></div>${items.length?items.map(eventCard).join(""):'<div class="hint empty-inline">Trống</div>'}</div>`;
   }
   $("#weekGrid").innerHTML=html;
+}
+function renderTasks(today){
+  const tasks=today.filter(e=>e.subject);
+  if(!selectedTaskId||!tasks.some(e=>e.id===selectedTaskId))selectedTaskId=tasks[0]?.id||null;
+  const list=$("#taskList"), detail=$("#taskDetail");
+  if(!tasks.length){
+    list.innerHTML='<div class="empty">Hôm nay chưa có task.</div>';
+    detail.innerHTML='<div class="detail-empty">Chọn một task để xem mô tả chi tiết.</div>';
+    return;
+  }
+  list.innerHTML=tasks.map(e=>
+    `<button class="task-item ${e.id===selectedTaskId?"active":""}" data-task-id="${esc(e.id)}">
+      <span class="task-time">${esc(e.start||"—")}</span><span>${esc(e.subject)}</span>
+    </button>`).join("");
+  list.querySelectorAll(".task-item").forEach(btn=>btn.onclick=()=>{
+    selectedTaskId=btn.dataset.taskId;renderTasks(today);
+  });
+  const task=tasks.find(e=>e.id===selectedTaskId)||tasks[0];
+  const lines=[
+    task.description,
+    task.note && task.note!==task.description ? task.note : "",
+    [task.start&&("Bắt đầu: "+task.start),task.end&&("Kết thúc: "+task.end),task.room&&("Phòng: "+task.room),task.teacher&&("Giảng viên: "+task.teacher)].filter(Boolean).join(" • ")
+  ].filter(Boolean);
+  detail.innerHTML=`<div class="detail-title">${esc(task.subject)}</div><div class="detail-body">${lines.length?lines.map(x=>`<p>${esc(x)}</p>`).join(""):'<p class="hint">Chưa có mô tả chi tiết cho task này.</p>'}</div>`;
 }
 function renderSubjects(){
   const map=new Map();
