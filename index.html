@@ -93,14 +93,26 @@
   <button data-page="settings" class="nav-item"><span>⚙</span><small>Cài đặt</small></button>
 </nav>
 
-<div id="taskModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal-backdrop" data-close-modal></div>
-  <div class="modal-sheet">
-    <button class="modal-close" data-close-modal aria-label="Đóng">×</button>
-    <div class="eyebrow">CHI TIẾT TASK</div>
-    <h2 id="modalTitle"></h2>
-    <div id="modalMeta" class="modal-meta"></div>
-    <div id="modalDescription" class="modal-description"></div>
+<div id="taskModal" class="task-page hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="task-page-topbar">
+    <button class="back-btn" data-close-modal aria-label="Quay lại">‹</button>
+    <div>
+      <div class="eyebrow">TASK DETAILS</div>
+      <strong>Chi tiết công việc</strong>
+    </div>
+    <button class="icon-btn ghost" data-close-modal aria-label="Đóng">×</button>
+  </div>
+  <div class="task-page-scroll">
+    <div class="detail-hero">
+      <div class="detail-icon">✓</div>
+      <div class="detail-category">TASK</div>
+      <h2 id="modalTitle"></h2>
+      <div id="modalMeta" class="modal-meta"></div>
+    </div>
+    <div class="detail-section">
+      <div class="detail-section-title">Mô tả</div>
+      <div id="modalDescription" class="modal-description"></div>
+    </div>
   </div>
 </div>
 
