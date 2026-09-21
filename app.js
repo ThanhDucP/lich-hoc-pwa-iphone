@@ -95,7 +95,7 @@ function eventCard(e){
   const start=new Date(`${e.date}T${e.start||"00:00"}:00`);
   const end=new Date(`${e.date}T${e.end||e.start||"23:59"}:00`);
   const cls=now>=start&&now<=end?" current":now>end?" done":"";
-  const meta=[e.room&&`Phòng ${e.room}`,e.teacher,e.note].filter(Boolean).join(" • ");
+  const meta=e.description||e.note||[e.room&&`Phòng ${e.room}`,e.teacher].filter(Boolean).join(" • ");
   return `<article class="event${cls}">
     <div class="time">${esc(e.start||"—")}<small>${e.end?"–"+esc(e.end):""}</small></div>
     <div><div class="subject">${esc(e.subject)}</div><div class="meta">${esc(meta||"Chưa có thông tin")}</div></div>
