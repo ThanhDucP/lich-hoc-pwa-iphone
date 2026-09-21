@@ -3,10 +3,16 @@ const CONFIG_KEY="schedule-config-v2";
 const NOTIFIED_KEY="schedule-notified-v1";
 let schedule=[];
 let config=loadJSON(CONFIG_KEY,{apiUrl:"",apiToken:"",reminderMinutes:15});
+config.apiUrl=normalizeApiUrl(config.apiUrl);
 const $=s=>document.querySelector(s);
 const $$=s=>document.querySelectorAll(s);
 
 function loadJSON(key,fallback){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
+function normalizeApiUrl(value){
+  const s=String(value??"").trim();
+  if(!s)return "";
+  return s.replace(/(https:\/\/script\.google\.com)\/macros\/u\/\\d+\/s\//,"$1/macros/s/");
+}
 function saveJSON(key,value){localStorage.setItem(key,JSON.stringify(value))}
 function localISO(d){const x=new Date(d.getTime()-d.getTimezoneOffset()*60000);return x.toISOString().slice(0,10)}
 function todayISO(){return localISO(new Date())}
@@ -54,7 +60,7 @@ function jsonp(url){
     function cleanup(){clearTimeout(timer);delete window[callback];script.remove()}
     window[callback]=payload=>{cleanup();payload?.error?reject(Error(payload.error)):resolve(payload)};
     script.onerror=()=>{cleanup();reject(Error("API request failed"))};
-    const u=new URL(url);
+    const u=new URL(normalizeApiUrl(url));
     u.searchParams.set("callback",callback);
     if(config.apiToken)u.searchParams.set("token",config.apiToken);
     u.searchParams.set("t",Date.now());
@@ -170,7 +176,7 @@ $("#syncBtn").onclick=sync;
 $("#todayBtn").onclick=()=>{$("#weekPicker").value=todayISO();renderWeek(todayISO())};
 $("#weekPicker").onchange=e=>renderWeek(e.target.value);
 $("#saveSettings").onclick=()=>{
-  config={apiUrl:$("#apiUrl").value.trim(),apiToken:$("#apiToken").value.trim(),reminderMinutes:Number($("#reminderMinutes").value)||15};
+  config={apiUrl:normalizeApiUrl($("#apiUrl").value),apiToken:$("#apiToken").value.trim(),reminderMinutes:Number($("#reminderMinutes").value)||15};
   saveJSON(CONFIG_KEY,config);sync();
 };
 $("#notifyBtn").onclick=askNotify;
