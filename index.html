@@ -10,35 +10,47 @@
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon.svg">
   <link rel="stylesheet" href="styles.css">
-  <title>Lịch học</title>
+  <title>Lịch cá nhân</title>
 </head>
 <body>
 <header class="topbar">
-  <div><div class="eyebrow">LỊCH HỌC</div><h1 id="pageTitle">Hôm nay</h1></div>
+  <div>
+    <div class="eyebrow">LỊCH CÁ NHÂN</div>
+    <h1 id="pageTitle">Hôm nay</h1>
+  </div>
   <button class="icon-btn" id="syncBtn" aria-label="Đồng bộ">↻</button>
 </header>
 
 <main>
   <section id="home" class="page active">
     <div id="summaryCard" class="hero-card"></div>
-    <div class="section-head"><h2>Hôm nay</h2><button id="todayBtn" class="text-btn">Hôm nay</button></div>
-    <div id="todayList"></div>
 
-    <div class="section-head task-head"><h2>Task</h2><span class="hint">Chọn task để xem chi tiết</span></div>
-    <div id="taskList" class="task-list"></div>
-    <div class="detail-card">
-      <div class="detail-label">MÔ TẢ CHI TIẾT</div>
-      <div id="taskDetail" class="task-detail"></div>
+    <div class="day-toolbar">
+      <div>
+        <div class="eyebrow">HÔM NAY</div>
+        <h2 id="todayLabel"></h2>
+      </div>
+      <button id="finalizeBtn" class="secondary small-btn">Lưu ngày</button>
     </div>
+
+    <div id="todayList" class="timeline"></div>
+    <p class="hint center-hint">Chạm vào một task để xem chi tiết.</p>
   </section>
 
   <section id="week" class="page">
-    <div class="section-head"><h2>7 ngày</h2><input id="weekPicker" type="date" aria-label="Chọn ngày"></div>
-    <div id="weekGrid"></div>
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">LỊCH ĐÃ LƯU</div>
+        <h2>Tuần này</h2>
+      </div>
+      <button id="weekTodayBtn" class="text-btn">Hôm nay</button>
+    </div>
+    <div id="weekStrip" class="week-strip"></div>
+    <div id="weekContent"></div>
   </section>
 
   <section id="subjects" class="page">
-    <div class="section-head"><h2>Môn học</h2></div>
+    <div class="section-head"><h2>Môn / nhóm việc</h2></div>
     <div id="subjectList"></div>
   </section>
 
@@ -53,8 +65,10 @@
       </label>
       <label>Nhắc trước
         <select id="reminderMinutes">
-          <option value="5">5 phút</option><option value="10">10 phút</option>
-          <option value="15" selected>15 phút</option><option value="30">30 phút</option>
+          <option value="5">5 phút</option>
+          <option value="10">10 phút</option>
+          <option value="15" selected>15 phút</option>
+          <option value="30">30 phút</option>
           <option value="60">60 phút</option>
         </select>
       </label>
@@ -63,7 +77,7 @@
         <button id="notifyBtn" class="secondary">Cho phép thông báo</button>
         <button id="demoBtn" class="secondary">Dữ liệu mẫu</button>
       </div>
-      <p class="hint">Lịch đã đồng bộ được lưu trên máy để xem offline. Trên iPhone: mở bằng Safari → Chia sẻ → Add to Home Screen.</p>
+      <p class="hint">Lịch hôm nay được lấy từ Google Sheet. Các ngày đã chốt được lưu trên thiết bị để xem lại theo tuần.</p>
     </div>
     <div class="settings-card">
       <h3>Trạng thái</h3>
@@ -78,6 +92,18 @@
   <button data-page="subjects" class="nav-item"><span>◫</span><small>Môn</small></button>
   <button data-page="settings" class="nav-item"><span>⚙</span><small>Cài đặt</small></button>
 </nav>
+
+<div id="taskModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-backdrop" data-close-modal></div>
+  <div class="modal-sheet">
+    <button class="modal-close" data-close-modal aria-label="Đóng">×</button>
+    <div class="eyebrow">CHI TIẾT TASK</div>
+    <h2 id="modalTitle"></h2>
+    <div id="modalMeta" class="modal-meta"></div>
+    <div id="modalDescription" class="modal-description"></div>
+  </div>
+</div>
+
 <script src="app.js"></script>
 </body>
 </html>
