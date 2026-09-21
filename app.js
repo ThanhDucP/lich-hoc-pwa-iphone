@@ -85,7 +85,7 @@ function setStatus(text){if($("#status"))$("#status").textContent=text}
 function eventCard(e){
   const now=new Date(),start=new Date(e.date+"T"+(e.start||"00:00")+":00"),end=new Date(e.date+"T"+(e.end||e.start||"23:59")+":00");
   const cls=now>=start&&now<=end?" current":now>end?" done":"";
-  const meta=e.description||e.note||[e.room&&"Phòng "+e.room,e.teacher].filter(Boolean).join(" • ")||"Chưa có mô tả";
+  const meta=[e.room&&"Phòng "+e.room,e.teacher].filter(Boolean).join(" • ");
   return '<button class="event'+cls+'" data-task-id="'+esc(e.id)+'"><div class="time">'+esc(e.start||"—")+'<small>'+ (e.end?"–"+esc(e.end):"")+'</small></div><div class="dot"></div><div><div class="subject">'+esc(e.subject)+'</div><div class="meta">'+esc(meta)+'</div></div></button>'
 }
 function render(){
@@ -153,6 +153,7 @@ $("#notifyBtn").onclick=askNotify;
 $("#demoBtn").onclick=demo;
 $$("[data-close-modal]").forEach(x=>x.onclick=closeModal);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+window.addEventListener("popstate",()=>{if(!$("#taskModal").classList.contains("hidden"))closeModal()});
 if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 schedule=loadJSON(DATA_KEY,[]);
 applyConfig();
