@@ -11,7 +11,7 @@ function loadJSON(key,fallback){try{return JSON.parse(localStorage.getItem(key))
 function normalizeApiUrl(value){
   const s=String(value??"").trim();
   if(!s)return "";
-  return s.replace(/(https:\/\/script\.google\.com)\/macros\/u\/\\d+\/s\//,"$1/macros/s/");
+  return s.replace(/(https:\/\/script\.google\.com)\/macros\/u\/\d+\/s\//,"$1/macros/s/");
 }
 function saveJSON(key,value){localStorage.setItem(key,JSON.stringify(value))}
 function localISO(d){const x=new Date(d.getTime()-d.getTimezoneOffset()*60000);return x.toISOString().slice(0,10)}
